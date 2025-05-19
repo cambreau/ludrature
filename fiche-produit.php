@@ -2,7 +2,7 @@
   require_once('classes/CRUD.php');
   $crud = new CRUD;
   $themes = $crud->select('theme');
-  $produits = $crud->select('produit');
+  $produit = $crud->selectId('produit', $_GET['id']);
 ?>
 
 <!DOCTYPE html>
@@ -83,44 +83,26 @@
       </nav>
     </header>
     <main>
-      <section>
-        <h2>Profil administrateur</h2>
-        <p>Bienvenue dans votre profil administrateur</p>
-        <a class="bouton">Ajouter un produit</a>
-      </section>
-      <section class="section-produits">
-        <h2 class="section-produits__titre">Nos produits</h2>
-        <div class="produits-conteneur">
-            <?php 
-              
-              foreach ($produits as $produit)
-              {
-            ?>    
-                <a class="produit" href="fiche-produit.php?id=<?= $produit["id"]?>">
-                  <picture class="produit-image">
-                    <img src="<?= "images/produit-" . $produit["id"] . ".jpg"?>" alt="<?= $produit["nom"]?>" />
-                  </picture>
-                  <h3><?= $produit["nom"]?></h3>
-                  <div class="produit-description">
-                    <p><?= $produit["auteur"]?></p>
-                    <p>Edition: <?= $produit["edition"]?></p>
-                    <p>Prix: <?= $produit["prix"]?> $</p>
-                    <p>Age: <?= $produit["age_min"]?>
-                    <?php
-                    if ($produit["age_max"] != null)
-                    {
-                    ?>    
-                        <?= " - ".$produit["age_max"]?> ans</p>
-                    <?php
-                    }
-                    ?>    
-                  </div>    
-                </a>
-            <?php    
-              }
-            ?>
-        </div>
-      </section>
+      <section class="produit">
+            <picture class="produit-image">
+                <img src="<?= "images/produit-" . $produit["id"] . ".jpg"?>" alt="<?= $produit["nom"]?>" />
+            </picture>
+            <h3><?= $produit["nom"]?></h3>
+            <div class="produit-description">
+                <p><?= $produit["auteur"]?></p>
+                <p>Edition: <?= $produit["edition"]?></p>
+                <p>Prix: <?= $produit["prix"]?> $</p>
+                <p>Age: <?= $produit["age_min"]?>
+                <?php
+                if ($produit["age_max"] != null)
+                {
+                ?>    
+                    <?= " - ".$produit["age_max"]?> ans</p>
+                <?php
+                }
+                ?>    
+            </div>    
+        </section>
     </main>
     <footer class="bas-page">
       <p>Tous droits réservés &copy; 2025 Ludrature : Restaurant Livre et Jouets</p>

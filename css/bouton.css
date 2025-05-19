@@ -1,0 +1,22 @@
+/* Bouton Appel à l'action */
+/* Règles générales du bouton appel à l'action */
+.bouton {
+  min-width: 250px;
+  display: inline-block;
+  text-align: center;
+  background: var(--couleur-secondaire);
+  border-radius: var(--arrondi-grand);
+  border: 2px solid var(--couleur-secondaire);
+  padding: var(--rythme-serre) var(--rythme-tres-serre);
+  margin-top: var(--rythme-base);
+  color: var(--couleur-fond);
+  text-transform: uppercase;
+  font-weight: var(--epaisseur-police-tres-gras);
+}
+
+.bouton:hover {
+  background: var(--couleur-fond);
+  border: 2px solid var(--couleur-secondaire);
+  text-decoration: none;
+  color: var(--couleur-secondaire);
+}

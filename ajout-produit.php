@@ -1,8 +1,8 @@
 <?php
   require_once('classes/CRUD.php');
   $crud = new CRUD;
-  $themes = $crud->select('theme');
-  $produits = $crud->select('produit');
+  $categories = $crud->select('categorie');
+  $themes = $crud->select('produit_theme');
 ?>
 
 <!DOCTYPE html>
@@ -83,44 +83,32 @@
       </nav>
     </header>
     <main>
-      <section>
-        <h2>Profil administrateur</h2>
-        <p>Bienvenue dans votre profil administrateur</p>
-        <a class="bouton">Ajouter un produit</a>
-      </section>
-      <section class="section-produits">
-        <h2 class="section-produits__titre">Nos produits</h2>
-        <div class="produits-conteneur">
+      <form class="produit">
+        <select name="categorie" id="categorie" placeholder="Veuillez choisir une catégorie">
             <?php 
-              
-              foreach ($produits as $produit)
+              foreach ($categories as $categorie)
               {
-            ?>    
-                <a class="produit" href="fiche-produit.php?id=<?= $produit["id"]?>">
-                  <picture class="produit-image">
-                    <img src="<?= "images/produit-" . $produit["id"] . ".jpg"?>" alt="<?= $produit["nom"]?>" />
-                  </picture>
-                  <h3><?= $produit["nom"]?></h3>
-                  <div class="produit-description">
-                    <p><?= $produit["auteur"]?></p>
-                    <p>Edition: <?= $produit["edition"]?></p>
-                    <p>Prix: <?= $produit["prix"]?> $</p>
-                    <p>Age: <?= $produit["age_min"]?>
-                    <?php
-                    if ($produit["age_max"] != null)
-                    {
-                    ?>    
-                        <?= " - ".$produit["age_max"]?> ans</p>
-                    <?php
-                    }
-                    ?>    
-                  </div>    
-                </a>
-            <?php    
+            ?>
+                <option value="<?= $categorie['id'] ?>"><?= $categorie['nom'] ?></option>
+            <?php
               }
             ?>
-        </div>
-      </section>
+        </select>
+        <lablel for="nom">Nom:</lablel>
+        <input type="text" id="nom" name="nom"/>
+        <lablel for="description">Description:</lablel>
+        <textarea id="description" name="description"></textarea>
+        <lablel for="auteur">Auteur:</lablel>
+        <input type="text" id="auteur" name="auteur"/>
+        <lablel for="edition">Edition:</lablel>
+        <input type="text" id="edition" name="edition"/>
+        <lablel for="prix">Prix:</lablel>
+        <input type="number" id="prix" name="prix"/>
+        <lablel for="age_min">Age minimum:</lablel>
+        <input type="number" id="age_min" name="age_min"/>
+        <lablel for="age_max">Age maximum:</lablel>
+        <input type="number" id="age_max" name="age_max"/>
+      </form>
     </main>
     <footer class="bas-page">
       <p>Tous droits réservés &copy; 2025 Ludrature : Restaurant Livre et Jouets</p>
