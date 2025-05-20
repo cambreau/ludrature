@@ -25,6 +25,14 @@ class CRUD extends PDO{
         } 
     }
 
+       public function selectWhere($table, $value, $champ = 'id'){
+        $sql = "SELECT * FROM  $table WHERE $champ = :$champ";
+        $stmt = $this->prepare($sql);
+        $stmt->bindValue(":$champ", $value);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
     public function insert($table, $data){
         $champName = implode(', ', array_keys($data));
         $champValue = ":".implode(', :', array_keys($data));

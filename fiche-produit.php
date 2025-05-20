@@ -1,8 +1,17 @@
 <?php
-  require_once('classes/CRUD.php');
-  $crud = new CRUD;
-  $themes = $crud->select('theme');
-  $produit = $crud->selectId('produit', $_GET['id']);
+if(isset($_GET['id']) && $_GET['id']!=null){
+    require_once('classes/CRUD.php');
+    $id = $_GET['id'];
+    $crud = new CRUD;
+    $produit = $crud->selectId('produit', $_GET['id']);
+    if(!$produit){
+            header('location:index.php');
+    }
+}else{
+    header('location:index.php');
+}
+
+   require_once('variables-globales.php');
 ?>
 
 <!DOCTYPE html>
@@ -55,29 +64,25 @@
           <div class="sousMenu">
             <a href="#">Jeux de société <span>&#9663;</span></>
             <div>
-              <?php foreach ($themes as $theme)
-              {
-                if ($theme['categorie_id'] == 1)
-                {
+              <?php foreach ($themeJeux as $theme)
+                    {
               ?>    
-                  <a href="#"><?= $theme['nom'] ?></a>
+                        <a href="#"><?= $theme['nom'] ?></a>
               <?php    
-                }
-              }?>
+                    }
+              ?>
             </div>
           </div>
           <div class="sousMenu">
             <a href="#">Livres <span>&#9663;</span></a>
             <div>
-               <?php foreach ($themes as $theme)
-              {
-                if ($theme['categorie_id'] == 2)
-                {
+              <?php foreach ($themeLivre as $theme)
+                    {
               ?>    
-                  <a href="#"><?= $theme['nom'] ?></a>
+                        <a href="#"><?= $theme['nom'] ?></a>
               <?php    
-                }
-              }?>
+                    }
+              ?>
             </div>
           </div>
       </nav>
@@ -100,7 +105,14 @@
                     <?= " - ".$produit["age_max"]?> ans</p>
                 <?php
                 }
-                ?>    
+                ?>  
+                <div class="bouton-conteneur">
+                  <a class="bouton" href="produit-modifier.php?id=<?= $produit["id"]?>.php">Modifier</a>
+                  <form method="post" action="produit-supprimer.php">
+                      <input type="hidden" name="id" value="<?= $produit["id"]?>">
+                      <button class="bouton bouton-rouge" type="submit">Supprimer</button>
+                  </form>
+                </div>  
             </div>    
         </section>
     </main>

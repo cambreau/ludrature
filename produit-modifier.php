@@ -1,8 +1,33 @@
 <?php
-  require_once('classes/CRUD.php');
-  $crud = new CRUD;
-  require_once('variables-globales.php');
-  $categorie_id = isset($_POST['categorie']) ? $_POST['categorie'] : null;
+if(isset($_GET['id']) && $_GET['id']!=null){
+    require_once('classes/CRUD.php');
+    $id = $_GET['id'];
+    $crud = new CRUD;
+    $selectId = $crud->selectId('produit', $id);
+    if($selectId){
+        //La fonction extract() convertit les clés d’un tableau associatif en variables avec les mêmes noms.
+        extract($selectId);
+        //On récupère les thèmes du produit
+        $themesId = $crud->selectWhere('produit_theme', $id, 'produit_id');
+        $themesProduit = [];
+        foreach($themesId as $themeId){
+            $theme = $crud->selectId('theme', $themeId['theme_id']);
+            array_push($themesProduit, $theme);
+        }
+        //On récupère la catégorie du produit
+        require_once('variables-globales.php');
+        $themeJeuxIds = array_column($themeJeux, 'id'); 
+        $categorieProduit = in_array($themesId[0],$themeJeuxIds)? "Jeu" :"Livre";
+        print_r($themesProduit);
+
+    }else{
+
+        header('location:index.php');
+    }
+}else{
+    header('location:index.php');
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -79,53 +104,41 @@
       </nav>
     </header>
     <main>
-      <h2>Ajouter un produit</h2>
-      <form class="produit" method="post" action="produit.store.php">
-        <select name="categorie" id="categorie" placeholder="Veuillez choisir une catégorie" onchange="this.form.submit()" required >
-            <?php 
-              foreach ($categories as $categorie)
-              {
-            ?>
-                <option value="<?= $categorie['id'] ?>" <?= (isset($_POST['categorie']) && $_POST['categorie'] == $categorie['id']) ? 'selected':''?>>
-                <?= $categorie['nom'] ?></option>
-            <?php
-              }
-            ?>
-        </select>
-        <select name="theme[]" id="theme" multiple required>
-            <?php
-              if(isset($_POST['categorie'])){
-                if($_POST['categorie'] == 1){
-                  foreach ($themeJeux as $theme)
-                  {
-            ?>
-                      <option value="<?= $theme['id'] ?>"><?= $theme['nom'] ?></option>
-            <?php
-                  }
-                }else{
-                  foreach ($themeLivre as $theme)
-                  {
-            ?>
-                      <option value="<?= $theme['id'] ?>"><?= $theme['nom'] ?></option>
-            <?php
-                  }
-                }
-              }
-            ?>
-        </select>
+      <h2>Modifier le produit numéro <?=$id . " - " . $nom ?> </h2>
+       <div class="non-modifiable">
+        <p class="label-non-modifiable">Catégorie:</p>
+        <p class="input-non-modifiable"><?=$categorieProduit?></p>
+      </div>
+      <div class="non-modifiable">
+        <p class="label-non-modifiable">Thème:</p>
+        <?php
+          foreach($themesProduit as $theme){
+        ?>
+            <p class="input-non-modifiable"><?=$theme['nom']?></p>
+        <?php
+          }
+        ?>
+      </div>
+      <form class="form-produit" method="post" action="produit-mise-a-jour.php">
         <label for="nom">Nom:</label>
-        <input type="text" id="nom" name="nom" required/>
+        <input type="text" id="nom" name="nom" value="<?=$nom?>" required/>
         <label for="auteur">Auteur:</label>
-        <input type="text" id="auteur" name="auteur" required/>
+        <input type="text" id="auteur" name="auteur" value="<?=$auteur?>" required/>
         <label for="edition">Edition:</label>
-        <input type="text" id="edition" name="edition" required/>
+        <input type="text" id="edition" name="edition" value="<?=$edition?>"required/>
         <label for="prix">Prix:</label>
-        <input type="number" id="prix" name="prix" required/>
+        <input type="number" id="prix" name="prix" value="<?=$prix?>" required/>
         <label for="age_min">Age minimum:</label>
-        <input type="number" id="age_min" name="age_min" required/>
-        <label for="age_max">Age maximum:</label>
-        <input type="number" id="age_max" name="age_max"/>
-        <button type="submit">Ajouter</button>
+        <input type="number" id="age_min" name="age_min" value="<?=$age_min?>" required/>
+        <?php 
+        if($categorieProduit === 1){
+        ?>
+          <label for="age_max">Age maximum:</label>
+          <input type="number" id="age_max" name="age_max" value="<?=$age_max?>"/>
+        <?php
+        }
+        ?>
+        <button class="bouton" type="submit">Modifier</button>
       </form>
     </main>
     <footer class="bas-page">

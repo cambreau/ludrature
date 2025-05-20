@@ -16,7 +16,7 @@
   padding: var(--rythme-serre) var(--rythme-base) 0 var(--rythme-base);
 }
 
-.produit:hover {
+.produit-lien:hover {
   opacity: 0.6;
 }
 

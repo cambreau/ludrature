@@ -1,8 +1,9 @@
 <?php
   require_once('classes/CRUD.php');
   $crud = new CRUD;
-  $themes = $crud->select('theme');
   $produits = $crud->select('produit');
+
+  require_once('variables-globales.php');
 ?>
 
 <!DOCTYPE html>
@@ -55,29 +56,25 @@
           <div class="sousMenu">
             <a href="#">Jeux de société <span>&#9663;</span></>
             <div>
-              <?php foreach ($themes as $theme)
-              {
-                if ($theme['categorie_id'] == 1)
-                {
+              <?php foreach ($themeJeux as $theme)
+                    {
               ?>    
-                  <a href="#"><?= $theme['nom'] ?></a>
+                        <a href="#"><?= $theme['nom'] ?></a>
               <?php    
-                }
-              }?>
+                    }
+              ?>
             </div>
           </div>
           <div class="sousMenu">
             <a href="#">Livres <span>&#9663;</span></a>
             <div>
-               <?php foreach ($themes as $theme)
-              {
-                if ($theme['categorie_id'] == 2)
-                {
+              <?php foreach ($themeLivre as $theme)
+                    {
               ?>    
-                  <a href="#"><?= $theme['nom'] ?></a>
+                        <a href="#"><?= $theme['nom'] ?></a>
               <?php    
-                }
-              }?>
+                    }
+              ?>
             </div>
           </div>
       </nav>
@@ -96,7 +93,7 @@
               foreach ($produits as $produit)
               {
             ?>    
-                <a class="produit" href="fiche-produit.php?id=<?= $produit["id"]?>">
+                <a class="produit produit-lien" href="fiche-produit.php?id=<?= $produit["id"]?>">
                   <picture class="produit-image">
                     <img src="<?= "images/produit-" . $produit["id"] . ".jpg"?>" alt="<?= $produit["nom"]?>" />
                   </picture>
