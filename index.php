@@ -83,7 +83,7 @@
       <section>
         <h2>Profil administrateur</h2>
         <p>Bienvenue dans votre profil administrateur</p>
-        <a class="bouton">Ajouter un produit</a>
+        <a href="ajout-produit.php" class="bouton">Ajouter un produit</a>
       </section>
       <section class="section-produits">
         <h2 class="section-produits__titre">Nos produits</h2>

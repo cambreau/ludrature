@@ -107,7 +107,7 @@ if(isset($_GET['id']) && $_GET['id']!=null){
                 }
                 ?>  
                 <div class="bouton-conteneur">
-                  <a class="bouton" href="produit-modifier.php?id=<?= $produit["id"]?>.php">Modifier</a>
+                  <a class="bouton" href="produit-modifier.php?id=<?= $produit["id"]?>">Modifier</a>
                   <form method="post" action="produit-supprimer.php">
                       <input type="hidden" name="id" value="<?= $produit["id"]?>">
                       <button class="bouton bouton-rouge" type="submit">Supprimer</button>

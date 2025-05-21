@@ -25,13 +25,14 @@ class CRUD extends PDO{
         } 
     }
 
-       public function selectWhere($table, $value, $champ = 'id'){
-        $sql = "SELECT * FROM  $table WHERE $champ = :$champ";
+       public function selectWhere($table, $value, $champ = 'id', $columns = '*'){
+        $sql = "SELECT $columns FROM  $table WHERE $champ = :$champ";
         $stmt = $this->prepare($sql);
         $stmt->bindValue(":$champ", $value);
         $stmt->execute();
         return $stmt->fetchAll();
     }
+
 
     public function insert($table, $data){
         $champName = implode(', ', array_keys($data));
@@ -46,16 +47,24 @@ class CRUD extends PDO{
     }
 
     public function update($table, $data, $champ = "id"){
+        $updateData = $data;
+        $id = $data[$champ];  // Save the ID value
+        unset($updateData[$champ]);  // Remove ID from update data
+        
         $champName = null;
-        foreach($data as $key=>$value){
+        foreach($updateData as $key=>$value){
             $champName .= "$key = :$key, ";
         }
         $champName = rtrim($champName, ', ');
+        
         $sql = "UPDATE $table SET $champName WHERE $champ = :$champ";
         $stmt = $this->prepare($sql);
-        foreach($data as $key=>$value){
+        
+        foreach($updateData as $key=>$value){
             $stmt->bindValue(":$key", $value);
         }
+        $stmt->bindValue(":$champ", $id);  // Bind the WHERE clause parameter
+        
         if($stmt->execute()){
             return true;
         }else{

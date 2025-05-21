@@ -2,7 +2,16 @@
   require_once('classes/CRUD.php');
   $crud = new CRUD;
   require_once('variables-globales.php');
-  $categorie_id = isset($_POST['categorie']) ? $_POST['categorie'] : null;
+  $categorieSelection = isset($_GET['categorie'])?$_GET['categorie']:'';
+  $themesSelection = isset($_GET['themes']) && is_array($_GET['themes']) ? $_GET['themes'] : [];
+
+  // Construire query string themes[] pour GET
+  $themesGET = '';
+  if (!empty($themesSelection)) {
+    foreach ($themesSelection as $theme) {
+      $themesGET .= '&themes[]=' . urlencode($theme);
+    }
+  }
 ?>
 
 <!DOCTYPE html>
@@ -78,54 +87,70 @@
           </div>
       </nav>
     </header>
-    <main>
+    <main class="contenu">
       <h2>Ajouter un produit</h2>
-      <form class="produit" method="post" action="produit.store.php">
-        <select name="categorie" id="categorie" placeholder="Veuillez choisir une catégorie" onchange="this.form.submit()" required >
-            <?php 
+      <form class="form-produit" method="get" action="ajout-produit.php">
+        <label for="categorie">Catégorie:</label>
+        <select name="categorie" id="categorie" onchange="this.form.submit()" required >
+           <option class="placeholder" value="" disabled selected hidden>Choisissez une option</option>
+           <?php 
               foreach ($categories as $categorie)
               {
             ?>
-                <option value="<?= $categorie['id'] ?>" <?= (isset($_POST['categorie']) && $_POST['categorie'] == $categorie['id']) ? 'selected':''?>>
+                <option value="<?= $categorie['id'] ?>" <?= (isset($_GET['categorie']) && $_GET['categorie'] == $categorie['id']) ? 'selected':''?>>
                 <?= $categorie['nom'] ?></option>
             <?php
               }
             ?>
         </select>
-        <select name="theme[]" id="theme" multiple required>
-            <?php
-              if(isset($_POST['categorie'])){
-                if($_POST['categorie'] == 1){
-                  foreach ($themeJeux as $theme)
-                  {
-            ?>
-                      <option value="<?= $theme['id'] ?>"><?= $theme['nom'] ?></option>
-            <?php
-                  }
-                }else{
-                  foreach ($themeLivre as $theme)
-                  {
-            ?>
-                      <option value="<?= $theme['id'] ?>"><?= $theme['nom'] ?></option>
-            <?php
+      </form>
+      <form class="form-produit" method="get">
+          <label for="themes">Thèmes:</label>
+          <select name="themes[]" id="themes" onchange="this.form.submit()" multiple required>
+              <?php
+                if(isset($categorieSelection)){
+                  if($categorieSelection == 1){
+                    foreach ($themeJeux as $theme)
+                    {
+              ?>
+                        <option value="<?= $theme['id'] ?>" <?php if(is_array($themesSelection) && in_array($theme['id'], $themesSelection, false)){echo 'selected';}?>><?= $theme['nom'] ?></option>
+              <?php
+                    }
+                  }else{
+                    foreach ($themeLivre as $theme)
+                    {
+              ?>
+                        <option value="<?= $theme['id'] ?>" <?php if(is_array($themesSelection) && in_array($theme['id'], $themesSelection, false)){echo 'selected';}?>><?= $theme['nom'] ?></option>
+              <?php
+                    }
                   }
                 }
-              }
-            ?>
-        </select>
-        <label for="nom">Nom:</label>
-        <input type="text" id="nom" name="nom" required/>
-        <label for="auteur">Auteur:</label>
-        <input type="text" id="auteur" name="auteur" required/>
-        <label for="edition">Edition:</label>
-        <input type="text" id="edition" name="edition" required/>
-        <label for="prix">Prix:</label>
-        <input type="number" id="prix" name="prix" required/>
-        <label for="age_min">Age minimum:</label>
-        <input type="number" id="age_min" name="age_min" required/>
-        <label for="age_max">Age maximum:</label>
-        <input type="number" id="age_max" name="age_max"/>
-        <button type="submit">Ajouter</button>
+              ?>
+          </select>
+          <input type="hidden" name="categorie" value="<?= $categorieSelection ?>">
+      </form>
+      <form class="form-produit" method="post" action="produit-store.php?categorie=<?= $categorieSelection ?><?= $themesGET ?>">
+          <label for="nom">Nom:</label>
+          <input type="text" id="nom" name="nom" placeholder="Entrez le nom du produit"/>
+          <label for="auteur">Auteur:</label>
+          <input type="text" id="auteur" name="auteur" placeholder="Entrez le nom de l'auteur" required/>
+          <label for="edition">Edition:</label>
+          <input type="text" id="edition" name="edition" placeholder="Entrez le nom de l'édition" required/>
+          <label for="date_sortie">Date de sortie:</label>
+          <input type="date" id="date_sortie" name="date_sortie" placeholder="Entrez la date de sortie" required/>
+          <label for="prix">Prix:</label>
+          <input type="number" id="prix" name="prix" placeholder="Entrez le prix du produit" required/>
+          <label for="age_min">Age minimum:</label>
+          <input type="number" id="age_min" name="age_min" placeholder="Entrez l'age minimum" required/>
+           <?php 
+          if($categorieSelection == 1){
+          ?>
+          <label for="age_max">Age maximum:</label>
+          <input type="number" id="age_max" name="age_max" placeholder="Entrez l'age maximum"/>
+          <?php
+          }
+          ?>
+          <button class="bouton" type="submit">Ajouter</button>
       </form>
     </main>
     <footer class="bas-page">

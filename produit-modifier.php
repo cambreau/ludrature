@@ -1,8 +1,8 @@
 <?php
 if(isset($_GET['id']) && $_GET['id']!=null){
     require_once('classes/CRUD.php');
-    $id = $_GET['id'];
     $crud = new CRUD;
+     $id = $_GET['id'];
     $selectId = $crud->selectId('produit', $id);
     if($selectId){
         //La fonction extract() convertit les clés d’un tableau associatif en variables avec les mêmes noms.
@@ -17,9 +17,8 @@ if(isset($_GET['id']) && $_GET['id']!=null){
         //On récupère la catégorie du produit
         require_once('variables-globales.php');
         $themeJeuxIds = array_column($themeJeux, 'id'); 
-        $categorieProduit = in_array($themesId[0],$themeJeuxIds)? "Jeu" :"Livre";
-        print_r($themesProduit);
-
+        $categorieID=in_array($themesId[0]['theme_id'],$themeJeuxIds)? 1 :2;
+        if(isset($categorieID)){$categorieProduit =  $categorieID ==1 ? "Jeu" :"Livre";}
     }else{
 
         header('location:index.php');
@@ -120,18 +119,21 @@ if(isset($_GET['id']) && $_GET['id']!=null){
         ?>
       </div>
       <form class="form-produit" method="post" action="produit-mise-a-jour.php">
+        <input type="hidden" name="id" value="<?=$id?>"/>
         <label for="nom">Nom:</label>
         <input type="text" id="nom" name="nom" value="<?=$nom?>" required/>
         <label for="auteur">Auteur:</label>
         <input type="text" id="auteur" name="auteur" value="<?=$auteur?>" required/>
         <label for="edition">Edition:</label>
         <input type="text" id="edition" name="edition" value="<?=$edition?>"required/>
+        <label for="date_sortie">Date de sortie:</label>
+        <input type="date" id="date_sortie" name="date_sortie" value="<?=$date_sortie?>"/>
         <label for="prix">Prix:</label>
         <input type="number" id="prix" name="prix" value="<?=$prix?>" required/>
         <label for="age_min">Age minimum:</label>
         <input type="number" id="age_min" name="age_min" value="<?=$age_min?>" required/>
         <?php 
-        if($categorieProduit === 1){
+        if($categorieID == 1){
         ?>
           <label for="age_max">Age maximum:</label>
           <input type="number" id="age_max" name="age_max" value="<?=$age_max?>"/>
