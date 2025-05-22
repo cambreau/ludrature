@@ -18,7 +18,7 @@ if (!isset($_POST['age_max'])) {
 $update = $crud->update('produit', $_POST);
 
 if($update){
-    header('location:index.php');
+    header('location:fiche-produit.php?id='.$id);
 }else{
     echo "error";
 }

@@ -1,4 +1,4 @@
-.section-produits {
+.produits-section {
   display: flex;
   flex-direction: column;
   gap: var(--rythme-espace);

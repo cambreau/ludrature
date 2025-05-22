@@ -18,8 +18,8 @@ CREATE TABLE categorie (
   CREATE TABLE produit (
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   nom VARCHAR(100) NOT NULL,
-  edition VARCHAR(100) NOT NULL,
   auteur VARCHAR(100) NOT NULL,
+  edition VARCHAR(100) NOT NULL,
   date_sortie DATE NOT NULL,
   prix VARCHAR(20) NOT NULL,
   age_min INT NOT NULL,
