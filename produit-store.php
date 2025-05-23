@@ -2,10 +2,12 @@
 require_once('classes/CRUD.php');
 $crud = new CRUD;
 
+if(isset($_POST['age_max'])){
+unset($_POST['age_max']); // On supprime l'age max du produit
+}
+
 //Ajout dans la table produit
 $insertProduit = $crud->insert('produit', $_POST);
-
-
 
 //Ajout dans la table produit_theme
 $themes=$_GET['themes'];
